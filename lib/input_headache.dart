@@ -167,8 +167,8 @@ class _InputScreenState extends State<InputScreen> {
                             roomNo: roomNo,
                             regNo: regNo,
                             phoneNo: phoneNo,
-                            time: time,
-                            date: date,
+                            dateTime: DateTime(date.year, date.month, date.day,
+                                time.hour, time.minute),
                           );
                           headache.display();
                           _addData().then((value) {
@@ -201,9 +201,15 @@ class _InputScreenState extends State<InputScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return const Dialog(
-          child: Center(
-            child: CircularProgressIndicator(),
+        return Dialog(
+          child: SizedBox(
+            height: 100,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                CircularProgressIndicator(),
+              ],
+            ),
           ),
         );
       },

@@ -6,15 +6,13 @@ import 'input_headache.dart';
 class Headache {
   String itemName, borrowerName, roomNo;
   String? regNo, phoneNo;
-  DateTime date;
-  TimeOfDay time;
+  DateTime dateTime;
 
   Headache({
     required this.itemName,
     required this.borrowerName,
     required this.roomNo,
-    required this.time,
-    required this.date,
+    required this.dateTime,
     this.regNo,
     this.phoneNo,
   });
@@ -27,9 +25,8 @@ class Headache {
     return Headache(
       itemName: data?['itemName'],
       borrowerName: data?['borrowerName'],
-      date: data?['date'],
+      dateTime: data?['dateTime'],
       roomNo: data?['roomNo'],
-      time: data?['time'],
       phoneNo: data?['phoneNo'],
       regNo: data?['regNo'],
     );
@@ -39,16 +36,15 @@ class Headache {
     return {
       "itemName": itemName,
       "borrowerName": borrowerName,
-      "date": date,
+      "dateTime": dateTime,
       "roomNo": roomNo,
-      "time": time,
       if (phoneNo != null) "phoneNo": phoneNo,
       if (regNo != null) "regNo": regNo,
     };
   }
 
   display(){
-    debugPrint('Debug: $itemName $borrowerName $roomNo $date $time');
+    debugPrint('Debug: $itemName $borrowerName $roomNo $dateTime');
     debugPrint('Debug: ${regNo == '' || regNo == null ? 'null/empty' : regNo} ${phoneNo == '' || phoneNo == null ? 'null/empty' : phoneNo}');
   }
 }
