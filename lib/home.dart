@@ -11,7 +11,8 @@ class Headache {
   String _formattedDate() {
     return '${dateTime.day < 10 ? '0' : ''}${dateTime.day}-${dateTime.month < 10 ? '0' : ''}${dateTime.month}-${dateTime.year}';
   }
-  String _formattedTime(context){
+
+  String _formattedTime(context) {
     var timeOfDay = TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
     return timeOfDay.format(context);
   }
@@ -89,24 +90,34 @@ class _HomeState extends State<Home> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: FirestoreListView(
-          query: usersQuery,
-          itemBuilder: (context, snapshot) {
-            Headache headache = snapshot.data();
-            return ListTile(
-              isThreeLine: true,
-              title: Text(headache.itemName),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(headache._formattedDate()),
-                  Text(headache._formattedTime(context)),
-                  Text(headache.roomNo),
-                ],
-              ),
-            );
-          },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FirestoreListView(
+            query: usersQuery,
+            itemBuilder: (context, snapshot) {
+              Headache headache = snapshot.data();
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  tileColor: Colors.deepPurple,
+                  isThreeLine: true,
+                  title: Text(headache.itemName),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(headache.borrowerName + ' • ' + headache.roomNo),
+                      Text(headache._formattedDate() +
+                          ' • ' +
+                          headache._formattedTime(context)),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
