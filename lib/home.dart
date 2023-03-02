@@ -86,7 +86,20 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Current Headaches'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: const [
+            InkWell(
+              onTap: null,
+              child: CircleAvatar(child: Icon(Icons.filter_alt_rounded)),
+            ),
+            Text('Current Headaches'),
+            InkWell(
+              onTap: null,
+              child: CircleAvatar(child: Icon(Icons.sort)),
+            ),
+          ],
+        ),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -108,10 +121,8 @@ class _HomeState extends State<Home> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(headache.borrowerName + ' • ' + headache.roomNo),
-                      Text(headache._formattedDate() +
-                          ' • ' +
-                          headache._formattedTime(context)),
+                      Text('${headache.borrowerName} • ${headache.roomNo}'),
+                      Text('${headache._formattedDate()} • ${headache._formattedTime(context)}'),
                     ],
                   ),
                 ),
