@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:who_borrowed_what/home.dart';
+
+import 'home/headache_class.dart';
 
 class InputScreen extends StatefulWidget {
   const InputScreen({super.key});
@@ -20,6 +21,40 @@ class _InputScreenState extends State<InputScreen> {
           '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}');
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _pressed = false;
+  String? _validator(String? value) {
+    return (value == null || value.isEmpty) ? 'Invalid value' : null;
+  }
+
+  Future<DocumentReference<Headache>> _addData() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          child: SizedBox(
+            height: 100,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    return await FirebaseFirestore.instance
+        .collection('headaches')
+        .withConverter(
+          fromFirestore: Headache.fromFirestore,
+          toFirestore: (value, options) => value.toFirestore(),
+        )
+        .add(headache)
+      ..update({
+        'normBorrowerName': headache.borrowerName.toUpperCase(),
+        'normItemName': headache.itemName.toUpperCase(),
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +199,9 @@ class _InputScreenState extends State<InputScreen> {
                           headache = Headache(
                             itemName: itemName,
                             borrowerName: borrowerName,
-                            roomNo: roomNo,
-                            regNo: regNo,
+                            roomNo: roomNo.toUpperCase(),
+                            regNo: regNo!
+                                .toUpperCase(), //won't be null its just empty
                             phoneNo: phoneNo,
                             dateTime: DateTime(date.year, date.month, date.day,
                                 time.hour, time.minute),
@@ -190,36 +226,5 @@ class _InputScreenState extends State<InputScreen> {
         ),
       ),
     );
-  }
-
-  String? _validator(String? value) {
-    return (value == null || value.isEmpty) ? 'Invalid value' : null;
-  }
-
-  Future<DocumentReference<Headache>> _addData() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return Dialog(
-          child: SizedBox(
-            height: 100,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                CircularProgressIndicator(),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    return await FirebaseFirestore.instance
-        .collection('headaches')
-        .withConverter(
-          fromFirestore: Headache.fromFirestore,
-          toFirestore: (value, options) => value.toFirestore(),
-        )
-        .add(headache);
-  }
+  }//TODO:Remove debug prints
 }
