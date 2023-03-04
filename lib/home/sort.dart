@@ -1,24 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:who_borrowed_what/home/user_queries_class.dart';
 
-class MySort extends StatelessWidget {
+class MySort extends StatefulWidget {
   const MySort({super.key});
 
   @override
+  State<MySort> createState() => _MySortState();
+}
+
+class _MySortState extends State<MySort> {
+  String _dropValue = 'Newest First';
+  dropDownCallBack(String? selectedValue) {
+    setState(() {
+      _dropValue = selectedValue ?? _dropValue;
+      selectedValue == 'Newest First'
+          ? currentQuery.value = userQueries.orderByNewest
+          : currentQuery.value = userQueries.orderByOldest;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return PopupMenuButton(
-      offset: Offset(100, 0),
-        itemBuilder: (context) => [
-              PopupMenuItem(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton.icon(onPressed: (){print('');}, icon: Icon(Icons.arrow_upward_rounded), label: Text('Sort By New')),
-                    TextButton.icon(onPressed: null, icon: Icon(Icons.arrow_downward_rounded), label: Text('Sort By Old')),
-                  ],
-                ),
-              )
+    return DropdownButton(
+      borderRadius: BorderRadius.circular(16),
+      alignment: AlignmentDirectional.bottomCenter,
+      value: _dropValue,
+      items: [
+        DropdownMenuItem(
+          value: 'Newest First',
+          child: Wrap(
+            children: const [
+              Icon(Icons.arrow_upward_rounded),
+              Text(' Newest First'),
             ],
-        child: CircleAvatar(child: Icon(Icons.sort)));
+          ),
+        ),
+        DropdownMenuItem(
+          value: 'Oldest First',
+          child: Wrap(
+            children: const [
+              Icon(Icons.arrow_downward_rounded),
+              Text(' Oldest First'),
+            ],
+          ),
+        )
+      ],
+      onChanged: dropDownCallBack,
+    );
   }
 }

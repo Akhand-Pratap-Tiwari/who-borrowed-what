@@ -6,6 +6,7 @@ import 'package:who_borrowed_what/home/sort.dart';
 
 import '../input_headache.dart';
 import 'headache_class.dart';
+import 'user_queries_class.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,7 +16,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  double _width = 135;
 
   void _addHeadacheScreen() {
     Navigator.of(context).push(MaterialPageRoute(
@@ -25,17 +25,21 @@ class _HomeState extends State<Home> {
     ));
   }
 
+  double _width = 200;
+  final double _minWidth = 200;
   animateTrigger() {
     setState(() {
-      _width = _width == 135 ? 300 : 135;
+      _width = _width == _minWidth ? MediaQuery.of(context).size.width-20 : _minWidth;
     });
   }
 
-  final usersQuery =
-      FirebaseFirestore.instance.collection('headaches').withConverter(
-            fromFirestore: Headache.fromFirestore,
-            toFirestore: (value, options) => value.toFirestore(),
-          ).orderBy('dateTime', descending: true);
+  final usersQuery = FirebaseFirestore.instance
+      .collection('headaches')
+      .withConverter(
+        fromFirestore: Headache.fromFirestore,
+        toFirestore: (value, options) => value.toFirestore(),
+      )
+      .orderBy('dateTime', descending: true);
 
   @override
   Widget build(BuildContext context) {
@@ -45,26 +49,33 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         bottom: Tab(
           child: AnimatedContainer(
+            // color: Colors.red,
             curve: Curves.elasticInOut,
             width: _width,
             duration: const Duration(milliseconds: 1000),
-            child: ListTile(
-              trailing: const MySort(),
-              title: TextField(
-                maxLines: 1,
-                onTapOutside: (event) => FocusManager.instance.primaryFocus!.unfocus(),
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                  prefixIcon: IconButton(
-                    icon: const Icon(Icons.search_rounded),
-                    onPressed: () => animateTrigger(),
+            child: Row(
+              children: [
+                Flexible(
+                  child: TextField(
+                    maxLines: 1,
+                    onTapOutside: (event) =>
+                        FocusManager.instance.primaryFocus!.unfocus(),
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                      prefixIcon: IconButton(
+                        icon: const Icon(Icons.search_rounded),
+                        onPressed: () => animateTrigger(),
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                      border:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(40)),
+                    ),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(40)),
                 ),
-              ),
+                const SizedBox(width: 10,),
+                const MySort(),
+              ],
             ),
           ),
         ),
@@ -72,13 +83,19 @@ class _HomeState extends State<Home> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-          child: FirestoreListView(
-            query: usersQuery,
-            itemBuilder: (context, snapshot) {
-              Headache headache = snapshot.data();
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: MyListTile(headache: headache),
+          child: ValueListenableBuilder(
+            valueListenable: currentQuery,
+            builder:
+                (BuildContext context, Query<Headache> currentQueryValue, Widget? child) {
+              return FirestoreListView(
+                query: currentQueryValue,
+                itemBuilder: (context, snapshot) {
+                  Headache headache = snapshot.data();
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: MyListTile(headache: headache),
+                  );
+                },
               );
             },
           ),
