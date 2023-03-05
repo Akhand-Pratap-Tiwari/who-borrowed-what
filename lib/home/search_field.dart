@@ -48,6 +48,9 @@ class _MySearchFieldState extends State<MySearchField> {
       controller: searchController,
       textInputAction: TextInputAction.search,
       onEditingComplete: () {
+        searchController.text = searchController.text.trim();
+        searchController.selection =
+            TextSelection.collapsed(offset: searchController.text.length);
         currentQuery.value = qb.replace(
             where: Where(
                 field: field, isEqualTo: searchController.text.toUpperCase()));
@@ -57,7 +60,9 @@ class _MySearchFieldState extends State<MySearchField> {
       decoration: InputDecoration(
         suffixIcon: widget1,
         prefixIcon: IconButton(
-          icon: const Icon(Icons.search_rounded),
+          icon: widget.homeState.width != widget.homeState.minWidth
+              ? const Icon(Icons.restart_alt_rounded)
+              : const Icon(Icons.search_rounded),
           onPressed: onSearchIconPressed,
         ),
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),

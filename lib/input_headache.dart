@@ -196,12 +196,11 @@ class _InputScreenState extends State<InputScreen> {
                           _pressed = true;
                           _formKey.currentState!.save();
                           headache = Headache(
-                            itemName: itemName,
-                            borrowerName: borrowerName,
-                            roomNo: roomNo.toUpperCase(),
-                            regNo: regNo!
-                                .toUpperCase(), //won't be null its just empty
-                            phoneNo: phoneNo,
+                            itemName: itemName.trim(),
+                            borrowerName: borrowerName.trim(),
+                            roomNo: roomNo.trim().toUpperCase(),
+                            regNo: regNo!.trim().toUpperCase(), //won't be null its just empty
+                            phoneNo: phoneNo!.trim(), //won't be null here its just empty
                             dateTime: DateTime(date.year, date.month, date.day,
                                 time.hour, time.minute),
                           );
@@ -226,8 +225,8 @@ class _InputScreenState extends State<InputScreen> {
       ),
     );
   }//TODO:Remove debug prints
-  //TODO:Remove spaces from field
   //TODO:Implement date search
   //TODO:Make Mobile call 
   //TODO:Remove system and history system
+  //TODO:Remove display methods
 }

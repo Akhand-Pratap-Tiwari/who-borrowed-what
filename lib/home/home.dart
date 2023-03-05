@@ -35,10 +35,9 @@ class _HomeState extends State<Home> {
 
   double width = 200;
   double minWidth = 200;
-  changeWidth(){
-    width = width == minWidth
-                ? MediaQuery.of(context).size.width - 16
-                : minWidth;
+  changeWidth() {
+    width =
+        width == minWidth ? MediaQuery.of(context).size.width - 16 : minWidth;
   }
 
   @override
@@ -74,6 +73,26 @@ class _HomeState extends State<Home> {
                 Widget? child) {
               return FirestoreListView(
                 query: currentQueryValue,
+                errorBuilder: (context, error, stackTrace) => Center(
+                  child: Text(
+                    'Operation failed with $error',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+                emptyBuilder: (context) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.asset('assets/error.gif'),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'We Found Nothing',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
                 itemBuilder: (context, snapshot) {
                   Headache headache = snapshot.data();
                   return Padding(
@@ -92,5 +111,4 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-  
 }
