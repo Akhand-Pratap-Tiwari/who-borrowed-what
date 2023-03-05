@@ -17,6 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool showResolved = false;
   void _addHeadacheScreen() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
@@ -44,6 +45,34 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: PopupMenuButton(
+              child: Icon(Icons.more_vert),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  onTap: (){
+                    showResolved = showResolved ? false : true; 
+                    if(showResolved){
+                      currentQuery.value = qb.replace(wheres: {'rwc':Where(field: 'resolved', isEqualTo: true)});
+                    }
+                    else{
+                      currentQuery.value = qb.replace(wheres: {'rwc':Where(field: 'resolved', isEqualTo: false)});
+                    }
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: !showResolved
+                        ? [Icon(Icons.done_all_rounded), Text('  Show Resolved')]
+                        : [Icon(Icons.flag_rounded), Text('  Show UnResolved')],
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
         title: const Text('Current Headaches'),
         centerTitle: true,
         bottom: Tab(
@@ -97,7 +126,11 @@ class _HomeState extends State<Home> {
                   Headache headache = snapshot.data();
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: MyListTile(headache: headache, docId: snapshot.id,),
+                    child: MyListTile(
+                      resolved: snapshot.get('resolved'),
+                      headache: headache,
+                      docId: snapshot.id,
+                    ),
                   );
                 },
               );

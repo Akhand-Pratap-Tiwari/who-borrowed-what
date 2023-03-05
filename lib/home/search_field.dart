@@ -27,7 +27,7 @@ class _MySearchFieldState extends State<MySearchField> {
         if (widget.homeState.width != widget.homeState.minWidth) {
           widget1 = MySuffixPopUp(mySearchFieldState: this);
         } else {
-          currentQuery.value = qb.removeClause(where: true);
+          currentQuery.value = qb.removeClause(wheresKeys: ['swc']);
           searchController.text = '';
           widget1 = null;
         }
@@ -52,8 +52,8 @@ class _MySearchFieldState extends State<MySearchField> {
         searchController.selection =
             TextSelection.collapsed(offset: searchController.text.length);
         currentQuery.value = qb.replace(
-            where: Where(
-                field: field, isEqualTo: searchController.text.toUpperCase()));
+            wheres: {'swc':Where(
+                field: field, isEqualTo: searchController.text.toUpperCase()),});
       },
       onTapOutside: (event) => FocusManager.instance.primaryFocus!.unfocus(),
       textAlignVertical: TextAlignVertical.center,

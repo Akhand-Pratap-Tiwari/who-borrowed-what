@@ -7,7 +7,8 @@ import 'headache_class.dart';
 class MyListTile extends StatelessWidget {
   final Headache headache;
   final String docId;
-  const MyListTile({super.key, required this.headache, required this.docId});
+  final bool resolved;
+  const MyListTile({super.key, required this.headache, required this.docId, required this.resolved});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,10 @@ class MyListTile extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.amber),
-              child: Icon(
+              child: resolved ? Icon(
+                Icons.repeat_sharp,
+                color: Colors.teal,
+              ) : Icon(
                 Icons.done_rounded,
                 color: Colors.teal,
               ),
