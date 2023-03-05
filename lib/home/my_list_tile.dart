@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'headache_class.dart';
 
 class MyListTile extends StatelessWidget {
   final Headache headache;
-  const MyListTile({super.key, required this.headache});
+  final String docId;
+  const MyListTile({super.key, required this.headache, required this.docId});
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +37,19 @@ class MyListTile extends StatelessWidget {
       ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          InkWell(
-              child: IconButton(
-            icon: Icon(Icons.done_outline_rounded),
-            onPressed: null,
-          )),
+        children: [
+          InkResponse(
+            onTap: (){
+            },
+            child: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.amber),
+              child: Icon(
+                Icons.done_rounded,
+                color: Colors.teal,
+              ),
+            ),
+          ),
         ],
       ),
     );

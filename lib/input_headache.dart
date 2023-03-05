@@ -51,6 +51,7 @@ class _InputScreenState extends State<InputScreen> {
         )
         .add(headache)
       ..update({
+        'resolved':false,
         'normBorrowerName': headache.borrowerName.toUpperCase(),
         'normItemName': headache.itemName.toUpperCase(),
       });

@@ -97,7 +97,7 @@ class _HomeState extends State<Home> {
                   Headache headache = snapshot.data();
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: MyListTile(headache: headache),
+                    child: MyListTile(headache: headache, docId: snapshot.id,),
                   );
                 },
               );

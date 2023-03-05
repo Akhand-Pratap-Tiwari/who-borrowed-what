@@ -102,7 +102,7 @@ class QueryBuilder {
 }
 
 
-QueryBuilder qb = QueryBuilder(baseQuery: FirebaseFirestore.instance.collection('headaches').withConverter(
+QueryBuilder qb = QueryBuilder(baseQuery: FirebaseFirestore.instance.collection('headaches').where('resolved',isEqualTo: false).withConverter(
           fromFirestore: Headache.fromFirestore,
           toFirestore: (value, options) => value.toFirestore(),
         ), orderBy: OrderBy(field: 'dateTime', descending: true),);
