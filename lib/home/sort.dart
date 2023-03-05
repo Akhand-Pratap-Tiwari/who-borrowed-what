@@ -14,8 +14,8 @@ class _MySortState extends State<MySort> {
     setState(() {
       _dropValue = selectedValue ?? _dropValue;
       selectedValue == 'Newest First'
-          ? currentQuery.value = userQueries.orderByNewest
-          : currentQuery.value = userQueries.orderByOldest;
+          ? currentQuery.value = qb.replace(orderBy: OrderBy(field: 'dateTime', descending: true))
+          : currentQuery.value = qb.replace(orderBy: OrderBy(field: 'dateTime', descending: false));
     });
   }
 

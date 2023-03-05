@@ -189,13 +189,12 @@ class _InputScreenState extends State<InputScreen> {
                         ],
                       ),
                     ),
-
                     // const Divider(color: Colors.transparent),
                     FloatingActionButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate() && !_pressed) {
                           _pressed = true;
-                          Form.of(primaryFocus!.context!).save();
+                          _formKey.currentState!.save();
                           headache = Headache(
                             itemName: itemName,
                             borrowerName: borrowerName,

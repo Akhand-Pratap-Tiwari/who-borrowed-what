@@ -6,6 +6,7 @@ import 'package:who_borrowed_what/home/sort.dart';
 
 import '../input_headache.dart';
 import 'headache_class.dart';
+import 'search_field.dart';
 import 'user_queries_class.dart';
 
 class Home extends StatefulWidget {
@@ -16,21 +17,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   void _addHeadacheScreen() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
         return const InputScreen();
       },
     ));
-  }
-
-  double _width = 200;
-  final double _minWidth = 200;
-  animateTrigger() {
-    setState(() {
-      _width = _width == _minWidth ? MediaQuery.of(context).size.width-20 : _minWidth;
-    });
   }
 
   final usersQuery = FirebaseFirestore.instance
@@ -40,6 +32,14 @@ class _HomeState extends State<Home> {
         toFirestore: (value, options) => value.toFirestore(),
       )
       .orderBy('dateTime', descending: true);
+
+  double width = 200;
+  double minWidth = 200;
+  changeWidth(){
+    width = width == minWidth
+                ? MediaQuery.of(context).size.width - 16
+                : minWidth;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,29 +51,14 @@ class _HomeState extends State<Home> {
           child: AnimatedContainer(
             // color: Colors.red,
             curve: Curves.elasticInOut,
-            width: _width,
+            width: width,
             duration: const Duration(milliseconds: 1000),
             child: Row(
               children: [
-                Flexible(
-                  child: TextField(
-                    maxLines: 1,
-                    onTapOutside: (event) =>
-                        FocusManager.instance.primaryFocus!.unfocus(),
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: InputDecoration(
-                      prefixIcon: IconButton(
-                        icon: const Icon(Icons.search_rounded),
-                        onPressed: () => animateTrigger(),
-                      ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                      border:
-                          OutlineInputBorder(borderRadius: BorderRadius.circular(40)),
-                    ),
-                  ),
+                Flexible(child: MySearchField(homeState: this)),
+                const SizedBox(
+                  width: 10,
                 ),
-                const SizedBox(width: 10,),
                 const MySort(),
               ],
             ),
@@ -85,8 +70,8 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
           child: ValueListenableBuilder(
             valueListenable: currentQuery,
-            builder:
-                (BuildContext context, Query<Headache> currentQueryValue, Widget? child) {
+            builder: (BuildContext context, Query<Headache> currentQueryValue,
+                Widget? child) {
               return FirestoreListView(
                 query: currentQueryValue,
                 itemBuilder: (context, snapshot) {
@@ -107,4 +92,5 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+  
 }
