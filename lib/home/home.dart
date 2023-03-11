@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:who_borrowed_what/home/my_list_tile.dart';
+import 'package:who_borrowed_what/home/list_tile/my_list_tile_unres.dart';
 import 'package:who_borrowed_what/home/sort.dart';
 
 import '../input_headache.dart';
 import 'headache_class.dart';
+import 'list_tile/my_list_tile_res.dart';
+import 'my_drop_down_title.dart';
 import 'search_field.dart';
 import 'user_queries_class.dart';
 
@@ -17,22 +19,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool showResolved = false;
-  void _addHeadacheScreen() {
+  ValueNotifier<bool> showResolved = ValueNotifier(false);
+  void _inputHeadacheScreen() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
         return const InputScreen();
       },
     ));
   }
-
-  final usersQuery = FirebaseFirestore.instance
-      .collection('headaches')
-      .withConverter(
-        fromFirestore: Headache.fromFirestore,
-        toFirestore: (value, options) => value.toFirestore(),
-      )
-      .orderBy('dateTime', descending: true);
 
   double width = 200;
   double minWidth = 200;
@@ -45,37 +39,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: PopupMenuButton(
-              child: Icon(Icons.more_vert),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  onTap: (){
-                    showResolved = showResolved ? false : true; 
-                    if(showResolved){
-                      currentQuery.value = qb.replace(wheres: {'rwc':Where(field: 'resolved', isEqualTo: true)});
-                    }
-                    else{
-                      currentQuery.value = qb.replace(wheres: {'rwc':Where(field: 'resolved', isEqualTo: false)});
-                    }
-                  },
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: !showResolved
-                        ? [Icon(Icons.done_all_rounded), Text('  Show Resolved')]
-                        : [Icon(Icons.flag_rounded), Text('  Show UnResolved')],
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
-        title: const Text('Current Headaches'),
+        title:  MyDropDownTitle(showResolved: showResolved),
         centerTitle: true,
         bottom: Tab(
+          // height: 48,
           child: AnimatedContainer(
             // color: Colors.red,
             curve: Curves.elasticInOut,
@@ -84,62 +51,72 @@ class _HomeState extends State<Home> {
             child: Row(
               children: [
                 Flexible(child: MySearchField(homeState: this)),
-                const SizedBox(
-                  width: 10,
-                ),
+                const SizedBox(width: 10),
                 const MySort(),
+                // MyDropDownTitle(showResolved: showResolved)
               ],
             ),
           ),
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-          child: ValueListenableBuilder(
-            valueListenable: currentQuery,
-            builder: (BuildContext context, Query<Headache> currentQueryValue,
-                Widget? child) {
-              return FirestoreListView(
-                query: currentQueryValue,
-                errorBuilder: (context, error, stackTrace) => Center(
-                  child: Text(
-                    'Operation failed with $error',
+        child: ValueListenableBuilder(
+          valueListenable: currentQuery,
+          builder: (BuildContext context, Query<Headache> currentQueryValue,
+              Widget? child) {
+            // debugPrint('Debug1: Rebiult');
+            return FirestoreListView(
+              findChildIndexCallback: (key, snapshot) {
+                final valueKey = key as ValueKey;
+                final index = snapshot.docs.indexWhere((element) => element.id == valueKey.value);
+                if (index == -1) return null;
+                debugPrint('Debug1:'+index.toString());
+                return index;
+              },
+              padding: EdgeInsets.all(16),
+              query: currentQueryValue,
+              errorBuilder: (context, error, stackTrace) => Center(
+                child: Text(
+                  'Operation failed with $error',
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+              emptyBuilder: (context) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(32),
+                    child: Image.asset('assets/error.gif'),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'We Found Nothing',
                     style: TextStyle(color: Colors.red),
                   ),
-                ),
-                emptyBuilder: (context) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.asset('assets/error.gif'),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'We Found Nothing',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ],
-                ),
-                itemBuilder: (context, snapshot) {
-                  Headache headache = snapshot.data();
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: MyListTile(
-                      resolved: snapshot.get('resolved'),
-                      headache: headache,
-                      docId: snapshot.id,
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+                ],
+              ),
+              itemBuilder: (context, doc) {
+                Headache headache = doc.data();
+                return Padding(
+                  key: ValueKey(doc.id),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: showResolved.value
+                      ? MyListTileRes(
+                          headache: headache,
+                          docId: doc.id,
+                        )
+                      : MyListTileUnres(
+                          headache: headache,
+                          docId: doc.id,
+                        ),
+                );
+              },
+            );
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addHeadacheScreen,
+        onPressed: _inputHeadacheScreen,
         child: const Icon(Icons.add_box_rounded),
       ),
     );

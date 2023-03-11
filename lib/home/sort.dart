@@ -22,6 +22,7 @@ class _MySortState extends State<MySort> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
+      underline: Divider(color: Colors.transparent,),
       borderRadius: BorderRadius.circular(16),
       alignment: AlignmentDirectional.bottomCenter,
       value: _dropValue,
