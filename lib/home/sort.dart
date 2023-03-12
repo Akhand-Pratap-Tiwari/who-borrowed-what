@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:who_borrowed_what/home/user_queries_class.dart';
 
@@ -21,32 +22,34 @@ class _MySortState extends State<MySort> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton(
-      underline: Divider(color: Colors.transparent,),
-      borderRadius: BorderRadius.circular(16),
-      alignment: AlignmentDirectional.bottomCenter,
-      value: _dropValue,
-      items: [
-        DropdownMenuItem(
-          value: 'Newest First',
-          child: Wrap(
-            children: const [
-              Icon(Icons.arrow_upward_rounded),
-              Text(' Newest First'),
-            ],
+    return DropdownButtonHideUnderline(
+      child: DropdownButton(
+        // dropdownColor: MediaQuery.of(context).platformBrightness == Brightness.dark ? Colors.black38 : Colors.white70,
+        borderRadius: BorderRadius.circular(16),
+        alignment: AlignmentDirectional.bottomCenter,
+        value: _dropValue,
+        items: [
+          DropdownMenuItem(
+            value: 'Newest First',
+            child: Wrap(
+              children: const [
+                Icon(Icons.arrow_upward_rounded),
+                Text(' Newest First'),
+              ],
+            ),
           ),
-        ),
-        DropdownMenuItem(
-          value: 'Oldest First',
-          child: Wrap(
-            children: const [
-              Icon(Icons.arrow_downward_rounded),
-              Text(' Oldest First'),
-            ],
-          ),
-        )
-      ],
-      onChanged: dropDownCallBack,
+          DropdownMenuItem(
+            value: 'Oldest First',
+            child: Wrap(
+              children: const [
+                Icon(Icons.arrow_downward_rounded),
+                Text(' Oldest First'),
+              ],
+            ),
+          )
+        ],
+        onChanged: dropDownCallBack,
+      ),
     );
   }
 }

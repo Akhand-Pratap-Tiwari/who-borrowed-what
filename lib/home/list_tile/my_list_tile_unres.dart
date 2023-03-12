@@ -53,7 +53,7 @@ class _MyListTileUnresState extends State<MyListTileUnres> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(borderRadius),
                 color: Colors.amber),
-            duration: Duration(milliseconds: 250),
+            duration: const Duration(milliseconds: 250),
             child: (isLoading)
                 ? const Padding(
                     padding: EdgeInsets.all(8.0),

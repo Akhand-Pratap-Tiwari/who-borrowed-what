@@ -53,7 +53,7 @@ class _MyListTileResState extends State<MyListTileRes> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(borderRadius),
                 color: Colors.amber),
-            duration: Duration(milliseconds: 250),
+            duration: const Duration(milliseconds: 250),
             child: isLoading
                 ? const Padding(
                     padding: EdgeInsets.all(8.0),
@@ -71,7 +71,7 @@ class _MyListTileResState extends State<MyListTileRes> {
                             .update({'resolved': false});
                       } else {
                         await Future.delayed(
-                          Duration(seconds: 5),
+                          const Duration(seconds: 5),
                           () async => await FirebaseFirestore.instance
                               .collection('headaches')
                               .doc(widget.docId)
