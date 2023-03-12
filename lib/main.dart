@@ -17,5 +17,15 @@ Future<void> main() async {
       systemNavigationBarColor: Colors.transparent,
     ),
   );
+
+//TODO: Remove Future delayed at the end
+//TODO: Set anim durations 
+//TODO: Add cancel op,
+//TODO: Add collapsible button
+//TODO: Remove debug prints
+//TODO: Implement date search
+//TODO: Make Mobile call 
+//TODO: Remove display methods
+
   runApp(const MyApp());
 }

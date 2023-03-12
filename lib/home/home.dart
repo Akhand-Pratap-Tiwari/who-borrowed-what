@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:who_borrowed_what/home/list_tile/my_list_tile_unres.dart';
 import 'package:who_borrowed_what/home/sort.dart';
-
+import 'list_tile/my_list_tile.dart';
 import '../input_headache.dart';
 import 'headache_class.dart';
-import 'list_tile/my_list_tile_res.dart';
 import 'search_field.dart';
 import 'user_queries_class.dart';
 
@@ -69,7 +67,7 @@ class _HomeState extends State<Home> {
                     wheres: {'rwc': Where(field: 'resolved', isEqualTo: true)});
               }
             },
-            tabs: [
+            tabs: const [
               Tab(
                 icon: Icon(Icons.flag_rounded),
                 text: 'UnResolved',
@@ -127,11 +125,11 @@ class _HomeState extends State<Home> {
                     key: ValueKey(doc.id),
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: showResolved.value
-                        ? MyListTileRes(
+                        ? MyListTile.resolved(
                             headache: headache,
                             docId: doc.id,
                           )
-                        : MyListTileUnres(
+                        : MyListTile.unResolved(
                             headache: headache,
                             docId: doc.id,
                           ),

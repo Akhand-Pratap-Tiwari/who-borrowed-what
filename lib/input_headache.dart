@@ -224,9 +224,5 @@ class _InputScreenState extends State<InputScreen> {
         ),
       ),
     );
-  }//TODO:Remove debug prints
-  //TODO:Implement date search
-  //TODO:Make Mobile call 
-  //TODO:Remove system and history system
-  //TODO:Remove display methods
+  }
 }
