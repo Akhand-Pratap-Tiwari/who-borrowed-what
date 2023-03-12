@@ -86,14 +86,12 @@ class _HomeState extends State<Home> {
             valueListenable: currentQuery,
             builder: (BuildContext context, Query<Headache> currentQueryValue,
                 Widget? child) {
-              // debugPrint('Debug1: Rebiult');
               return FirestoreListView(
                 findChildIndexCallback: (key, snapshot) {
                   final valueKey = key as ValueKey;
                   final index = snapshot.docs
                       .indexWhere((element) => element.id == valueKey.value);
                   if (index == -1) return null;
-                  debugPrint('Debug1:' + index.toString());
                   return index;
                 },
                 padding: const EdgeInsets.all(16),

@@ -207,7 +207,6 @@ class _InputScreenState extends State<InputScreen> {
                           );
                           headache.display();
                           _addData().then((value) {
-                            debugPrint('Debug: ${value.id} added');
                             Navigator.of(context)
                                 .popUntil((route) => route.isFirst);
                             ScaffoldMessenger.of(context).showSnackBar(

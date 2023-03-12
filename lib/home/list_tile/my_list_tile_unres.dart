@@ -23,7 +23,6 @@ class _MyListTileUnresState extends State<MyListTileUnres> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Debug1: ${widget.key}');
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       tileColor: Colors.deepPurple,
