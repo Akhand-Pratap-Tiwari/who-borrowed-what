@@ -15,6 +15,15 @@ class _MySearchFieldState extends State<MySearchField> {
   TextEditingController searchController = TextEditingController();
   Widget? widget1;
   String field = 'normItemName';
+  
+  void _onEditingComplete(){
+    searchController.text = searchController.text.trim();
+        searchController.selection =
+            TextSelection.collapsed(offset: searchController.text.length);
+        currentQuery.value = qb.replace(
+            wheres: {'swc':Where(
+                field: field, isEqualTo: searchController.text.toUpperCase()),});
+  }
 
   onSearchIconPressed() {
     widget.homeState.setState(() {
@@ -31,7 +40,6 @@ class _MySearchFieldState extends State<MySearchField> {
           searchController.text = '';
           widget1 = null;
         }
-
         setState(() {});
       },
     );
@@ -47,14 +55,7 @@ class _MySearchFieldState extends State<MySearchField> {
       maxLines: 1,
       controller: searchController,
       textInputAction: TextInputAction.search,
-      onEditingComplete: () {
-        searchController.text = searchController.text.trim();
-        searchController.selection =
-            TextSelection.collapsed(offset: searchController.text.length);
-        currentQuery.value = qb.replace(
-            wheres: {'swc':Where(
-                field: field, isEqualTo: searchController.text.toUpperCase()),});
-      },
+      onEditingComplete: _onEditingComplete,
       onTapOutside: (event) => FocusManager.instance.primaryFocus!.unfocus(),
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(

@@ -30,10 +30,90 @@ class MyListTile extends StatefulWidget {
   State<MyListTile> createState() => _MyListTileState();
 }
 
-class _MyListTileState extends State<MyListTile> {
+class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin{
   bool isLoading = false;
   double borderRadius = 8;
+  late Widget moreButton;
+  late Widget tickButton;
+  
+  late AnimationController controller;
 
+  @override
+  void initState() {
+    moreButton = PopupMenuButton(
+      onSelected: (value) async {
+        setState(() {
+          isLoading = true;
+          borderRadius = 32;
+        });
+        if (value == 'restore') {
+          await FirebaseFirestore.instance
+              .collection('headaches')
+              .doc(widget.docId)
+              .update({'resolved': false});
+        } else {
+          await Future.delayed(
+            const Duration(seconds: 5),
+            () async => await FirebaseFirestore.instance
+                .collection('headaches')
+                .doc(widget.docId)
+                .delete(),
+          );
+        }
+      },
+      itemBuilder: (BuildContext popUpContext) => [
+        const PopupMenuItem(
+          value: 'restore',
+          child: Text('Restore'),
+        ),
+        const PopupMenuItem(
+          value: 'delete',
+          child: Text(
+            'Delete',
+            style: TextStyle(color: Colors.red),
+          ),
+        )
+      ],
+      icon: const Icon(
+        Icons.more_vert_rounded,
+        color: Colors.teal,
+      ),
+    );
+
+    tickButton = IconButton(
+        icon: const Icon(
+          Icons.done_rounded,
+          color: Colors.teal,
+        ),
+        onPressed: () async {
+          setState(() {
+            isLoading = true;
+            borderRadius = 32;
+          });
+          await Future.delayed(
+              const Duration(seconds: 5),
+              () async => await FirebaseFirestore.instance
+                  .collection('headaches')
+                  .doc(widget.docId)
+                  .update({'resolved': true}));
+        });
+
+    controller = AnimationController(
+      /// [AnimationController]s can be created with `vsync: this` because of
+      /// [TickerProviderStateMixin].
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..addListener(() {
+        setState(() {});
+      });
+
+    super.initState();
+  }
+@override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -64,74 +144,18 @@ class _MyListTileState extends State<MyListTile> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AnimatedContainer(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(borderRadius),
-                      color: Colors.amber),
-                  duration: const Duration(milliseconds: 250),
-                  child: (isLoading)
-                      ? const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator(),
-                        )
-                      : widget._resolved!
-                          ? PopupMenuButton(
-                              onSelected: (value) async {
-                                setState(() {
-                                  isLoading = true;
-                                  borderRadius = 32;
-                                });
-                                if (value == 'restore') {
-                                  await FirebaseFirestore.instance
-                                      .collection('headaches')
-                                      .doc(widget.docId)
-                                      .update({'resolved': false});
-                                } else {
-                                  await Future.delayed(
-                                    const Duration(seconds: 5),
-                                    () async => await FirebaseFirestore.instance
-                                        .collection('headaches')
-                                        .doc(widget.docId)
-                                        .delete(),
-                                  );
-                                }
-                              },
-                              itemBuilder: (BuildContext popUpContext) => [
-                                const PopupMenuItem(
-                                  value: 'restore',
-                                  child: Text('Restore'),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'delete',
-                                  child: Text(
-                                    'Delete',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                )
-                              ],
-                              icon: const Icon(
-                                Icons.more_vert_rounded,
-                                color: Colors.teal,
-                              ),
-                            )
-                          : IconButton(
-                              icon: const Icon(
-                                Icons.done_rounded,
-                                color: Colors.teal,
-                              ),
-                              onPressed: () async {
-                                setState(() {
-                                  isLoading = true;
-                                  borderRadius = 32;
-                                });
-                                await Future.delayed(const Duration(seconds: 5),() async => await FirebaseFirestore.instance
-                                    .collection('headaches')
-                                    .doc(widget.docId)
-                                    .update({
-                                  'resolved': true
-                                }) 
-                                );
-                              }),
-                ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(borderRadius),
+                        color: Colors.amber),
+                    duration: const Duration(milliseconds: 250),
+                    child: (isLoading)
+                        ? const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(),
+                          )
+                        : widget._resolved!
+                            ? moreButton
+                            : tickButton),
               ],
             ),
     );

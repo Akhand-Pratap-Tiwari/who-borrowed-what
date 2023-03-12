@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
             // color: Colors.red,
             curve: Curves.elasticInOut,
             width: width,
-            duration: const Duration(milliseconds: 1000),
+            duration: const Duration(seconds: 1),
             child: Row(
               children: [
                 Flexible(child: MySearchField(homeState: this)),
