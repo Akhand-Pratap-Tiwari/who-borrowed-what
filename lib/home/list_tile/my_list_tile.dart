@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -33,54 +31,6 @@ class MyListTile extends StatefulWidget {
 }
 
 class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin {
-  double borderRadius = 8;
-  late Widget moreButton;
-
-  @override
-  void initState() {
-    moreButton = PopupMenuButton(
-      onSelected: (value) async {
-        setState(() {
-          // isLoading = true;
-          borderRadius = 32;
-        });
-        if (value == 'restore') {
-          await FirebaseFirestore.instance
-              .collection('headaches')
-              .doc(widget.docId)
-              .update({'resolved': false});
-        } else {
-          await Future.delayed(
-            const Duration(seconds: 5),
-            () async => await FirebaseFirestore.instance
-                .collection('headaches')
-                .doc(widget.docId)
-                .delete(),
-          );
-        }
-      },
-      itemBuilder: (BuildContext popUpContext) => [
-        const PopupMenuItem(
-          value: 'restore',
-          child: Text('Restore'),
-        ),
-        const PopupMenuItem(
-          value: 'delete',
-          child: Text(
-            'Delete',
-            style: TextStyle(color: Colors.red),
-          ),
-        )
-      ],
-      icon: const Icon(
-        Icons.more_vert_rounded,
-        color: Colors.teal,
-      ),
-    );
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -111,11 +61,156 @@ class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 widget._resolved!
-                    ? moreButton
-                    // MyMoreButton()
+                    ? MyMoreButton(docId: widget.docId)
                     : MyTickButton(docId: widget.docId),
               ],
             ),
+    );
+  }
+}
+
+class MyMoreButton extends StatefulWidget {
+  final String docId;
+
+  const MyMoreButton({
+    super.key,
+    required this.docId,
+  });
+
+  @override
+  State<MyMoreButton> createState() => _MyMoreButtonState();
+}
+
+class _MyMoreButtonState extends State<MyMoreButton> with TickerProviderStateMixin {
+  bool finalActionStarted = false;
+  late AnimationController controller;
+  double borderRadius = 8;
+  ValueNotifier<String> loadingState = ValueNotifier('idle');
+   @override
+  void initState() {
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+          color: Colors.amber),
+      duration: const Duration(milliseconds: 250),
+      child: ValueListenableBuilder(
+        builder: (BuildContext context, state, Widget? child) {
+          if (state == 'restoring') {
+            if(!finalActionStarted) {
+              Future.delayed(
+              const Duration(seconds: 5),
+              () async {
+                await FirebaseFirestore.instance
+                    .collection('headaches')
+                    .doc(widget.docId)
+                    .update({'resolved': false});
+              },
+            );
+            }
+            finalActionStarted = true;
+            return const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state == 'deleting') {
+            controller.forward(from: controller.value);
+            return AnimatedBuilder(
+              animation: controller,
+              builder: (context, child) {
+                if (controller.isCompleted || finalActionStarted) {
+                  if(!finalActionStarted) {
+                    Future.delayed(
+                    const Duration(seconds: 5),
+                    () async => await FirebaseFirestore.instance
+                        .collection('headaches')
+                        .doc(widget.docId)
+                        .delete(),
+                  );
+                  }
+                  finalActionStarted = true;
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return IconButton(
+                  icon: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Icon(
+                        Icons.cancel_rounded,
+                        color: Colors.red,
+                      ),
+                      CircularProgressIndicator(
+                        value: 1 - controller.value,
+                        color: Colors.red,
+                      )
+                    ],
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      controller..reset()..stop();
+                      loadingState.value = 'idle';
+                      borderRadius = 8;
+                    });
+                  },
+                );
+              },
+            );
+          } else {
+            return PopupMenuButton(
+              onSelected: (value) async {
+                if (value == 'restore') {
+                  setState(() {
+                    loadingState.value = 'restoring';
+                    borderRadius = 32;
+                  });
+                } else {
+                  setState(() {
+                    loadingState.value = 'deleting';
+                    borderRadius = 32;
+                  });
+                }
+              },
+              itemBuilder: (BuildContext popUpContext) => [
+                const PopupMenuItem(
+                  value: 'restore',
+                  child: Text('Restore'),
+                ),
+                const PopupMenuItem(
+                  value: 'delete',
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                )
+              ],
+              icon: const Icon(
+                Icons.more_vert_rounded,
+                color: Colors.teal,
+              ),
+            );
+          }
+        },
+        valueListenable: loadingState,
+      ),
     );
   }
 }
@@ -130,7 +225,6 @@ class MyTickButton extends StatefulWidget {
 
 class _MyTickButtonState extends State<MyTickButton>
     with TickerProviderStateMixin {
-
   bool finalActionStarted = false;
   late AnimationController controller;
   double borderRadius = 8;
@@ -140,7 +234,7 @@ class _MyTickButtonState extends State<MyTickButton>
   void initState() {
     controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
     );
     super.initState();
   }
@@ -154,73 +248,73 @@ class _MyTickButtonState extends State<MyTickButton>
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(borderRadius),
-            color: Colors.amber),
-        duration: const Duration(milliseconds: 250),
-        child: ValueListenableBuilder(
-          valueListenable: isLoading,
-          builder: (context, loading, child) {
-            if (!loading) {
-              return IconButton(
-                  icon: const Icon(
-                    Icons.done_rounded,
-                    color: Colors.teal,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+          color: Colors.amber),
+      duration: const Duration(milliseconds: 250),
+      child: ValueListenableBuilder(
+        valueListenable: isLoading,
+        builder: (context, loading, child) {
+          if (!loading) {
+            return IconButton(
+                icon: const Icon(
+                  Icons.done_rounded,
+                  color: Colors.teal,
+                ),
+                onPressed: () {
+                  setState(() {
+                    isLoading.value = true;
+                    borderRadius = 32;
+                  });
+                });
+          } else {
+            controller.forward(from: controller.value);
+            return AnimatedBuilder(
+              animation: controller,
+              builder: (context, child) {
+                if (controller.isCompleted || finalActionStarted) {
+                  if(!finalActionStarted) {
+                    Future.delayed(
+                      const Duration(seconds: 5),
+                      () async => await FirebaseFirestore.instance
+                          .collection('headaches')
+                          .doc(widget.docId)
+                          .update({'resolved': true}));
+                  }
+                  finalActionStarted = true;
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return IconButton(
+                  icon: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Icon(
+                        Icons.cancel_rounded,
+                        color: Colors.red,
+                      ),
+                      CircularProgressIndicator(
+                        value: 1 - controller.value,
+                        color: Colors.red,
+                      )
+                    ],
                   ),
                   onPressed: () {
                     setState(() {
-                      isLoading.value = true;
-                      borderRadius = 32;
+                      controller..reset()..stop();
+                      isLoading.value = false;
+                      borderRadius = 8;
                     });
-                  });
-            } else {
-              controller.forward(from: 0.0);
-              return AnimatedBuilder(
-                animation: controller,
-                builder: (context, child) {
-                  if (controller.isCompleted || finalActionStarted) {
-                    finalActionStarted = true;
-                    Future.delayed(
-                        const Duration(seconds: 5),
-                        () async => await FirebaseFirestore.instance
-                            .collection('headaches')
-                            .doc(widget.docId)
-                            .update({'resolved': true}));
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  return IconButton(
-                    icon: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        const Icon(
-                          Icons.cancel_rounded,
-                          color: Colors.red,
-                        ),
-                        CircularProgressIndicator(
-                          value: 1 - controller.value,
-                          color: Colors.red,
-                        )
-                      ],
-                    ),
-                    onPressed: () {
-                      debugPrint('Anim: Tapped');
-                      setState(() {
-                        controller
-                          ..stop()
-                          ..reset();
-                        isLoading.value = false;
-                        borderRadius = 8;
-                      });
-                    },
-                  );
-                },
-              );
-            }
-          },
-        ));
+                  },
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
   }
 }
