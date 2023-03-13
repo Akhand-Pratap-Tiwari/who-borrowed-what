@@ -25,9 +25,11 @@ Future<void> main() async {
 //TODO: Remove debug prints
 //TODO: Implement date search
 //TODO: Make Mobile call 
-//TODO: Remove display methods
 //TODO: Remove state passing logic
 //TODO: Improve Themeing
+//TODO: State Preservation Across tabs
+//TODO: Do button logic optimization
+//TODO: Write some comments
 
   runApp(const MyApp());
 }

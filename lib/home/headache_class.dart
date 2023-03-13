@@ -50,9 +50,9 @@ class Headache {
     };
   }
 
-  display() {
-    debugPrint('Debug: $itemName $borrowerName $roomNo $dateTime');
-    debugPrint(
-        'Debug: ${regNo == '' || regNo == null ? 'null/empty' : regNo} ${phoneNo == '' || phoneNo == null ? 'null/empty' : phoneNo}');
-  }
+  // display() {
+  //   debugPrint('Debug: $itemName $borrowerName $roomNo $dateTime');
+  //   debugPrint(
+  //       'Debug: ${regNo == '' || regNo == null ? 'null/empty' : regNo} ${phoneNo == '' || phoneNo == null ? 'null/empty' : phoneNo}');
+  // }
 }

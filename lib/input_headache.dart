@@ -205,7 +205,7 @@ class _InputScreenState extends State<InputScreen> {
                             dateTime: DateTime(date.year, date.month, date.day,
                                 time.hour, time.minute),
                           );
-                          headache.display();
+                          // headache.display();
                           _addData().then((value) {
                             Navigator.of(context)
                                 .popUntil((route) => route.isFirst);
