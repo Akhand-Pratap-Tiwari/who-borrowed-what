@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -30,20 +32,16 @@ class MyListTile extends StatefulWidget {
   State<MyListTile> createState() => _MyListTileState();
 }
 
-class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin{
-  bool isLoading = false;
+class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin {
   double borderRadius = 8;
   late Widget moreButton;
-  late Widget tickButton;
-  
-  late AnimationController controller;
 
   @override
   void initState() {
     moreButton = PopupMenuButton(
       onSelected: (value) async {
         setState(() {
-          isLoading = true;
+          // isLoading = true;
           borderRadius = 32;
         });
         if (value == 'restore') {
@@ -80,40 +78,9 @@ class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin{
       ),
     );
 
-    tickButton = IconButton(
-        icon: const Icon(
-          Icons.done_rounded,
-          color: Colors.teal,
-        ),
-        onPressed: () async {
-          setState(() {
-            isLoading = true;
-            borderRadius = 32;
-          });
-          await Future.delayed(
-              const Duration(seconds: 5),
-              () async => await FirebaseFirestore.instance
-                  .collection('headaches')
-                  .doc(widget.docId)
-                  .update({'resolved': true}));
-        });
-
-    controller = AnimationController(
-      /// [AnimationController]s can be created with `vsync: this` because of
-      /// [TickerProviderStateMixin].
-      vsync: this,
-      duration: const Duration(seconds: 5),
-    )..addListener(() {
-        setState(() {});
-      });
-
     super.initState();
   }
-@override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -143,21 +110,117 @@ class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin{
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AnimatedContainer(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(borderRadius),
-                        color: Colors.amber),
-                    duration: const Duration(milliseconds: 250),
-                    child: (isLoading)
-                        ? const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: CircularProgressIndicator(),
-                          )
-                        : widget._resolved!
-                            ? moreButton
-                            : tickButton),
+                widget._resolved!
+                    ? moreButton
+                    // MyMoreButton()
+                    : MyTickButton(docId: widget.docId),
               ],
             ),
     );
+  }
+}
+
+class MyTickButton extends StatefulWidget {
+  final String docId;
+  const MyTickButton({super.key, required this.docId});
+
+  @override
+  State<MyTickButton> createState() => _MyTickButtonState();
+}
+
+class _MyTickButtonState extends State<MyTickButton>
+    with TickerProviderStateMixin {
+
+  bool finalActionStarted = false;
+  late AnimationController controller;
+  double borderRadius = 8;
+  ValueNotifier isLoading = ValueNotifier(false);
+
+  @override
+  void initState() {
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 5),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(borderRadius),
+            color: Colors.amber),
+        duration: const Duration(milliseconds: 250),
+        child: ValueListenableBuilder(
+          valueListenable: isLoading,
+          builder: (context, loading, child) {
+            if (!loading) {
+              return IconButton(
+                  icon: const Icon(
+                    Icons.done_rounded,
+                    color: Colors.teal,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isLoading.value = true;
+                      borderRadius = 32;
+                    });
+                  });
+            } else {
+              controller.forward(from: 0.0);
+              return AnimatedBuilder(
+                animation: controller,
+                builder: (context, child) {
+                  if (controller.isCompleted || finalActionStarted) {
+                    finalActionStarted = true;
+                    Future.delayed(
+                        const Duration(seconds: 5),
+                        () async => await FirebaseFirestore.instance
+                            .collection('headaches')
+                            .doc(widget.docId)
+                            .update({'resolved': true}));
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  return IconButton(
+                    icon: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const Icon(
+                          Icons.cancel_rounded,
+                          color: Colors.red,
+                        ),
+                        CircularProgressIndicator(
+                          value: 1 - controller.value,
+                          color: Colors.red,
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      debugPrint('Anim: Tapped');
+                      setState(() {
+                        controller
+                          ..stop()
+                          ..reset();
+                        isLoading.value = false;
+                        borderRadius = 8;
+                      });
+                    },
+                  );
+                },
+              );
+            }
+          },
+        ));
   }
 }
