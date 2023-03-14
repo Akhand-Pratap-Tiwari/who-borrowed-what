@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../headache_class.dart';
 import 'my_more_button.dart';
@@ -33,7 +34,15 @@ class MyListTile extends StatefulWidget {
   State<MyListTile> createState() => _MyListTileState();
 }
 
-class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin {
+class _MyListTileState extends State<MyListTile> {
+  _makeCall(Uri uri) async {
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $uri';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -55,15 +64,16 @@ class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin {
         children: [
           InkResponse(
             onTap: () {
-              
+              widget.headache.phoneNo != null && widget.headache.phoneNo != ''
+                  ? _makeCall(Uri(scheme: 'tel', path: widget.headache.phoneNo))
+                  : null;
             },
             child: CircleAvatar(
-              child:
-                  widget.headache.phoneNo == null || widget.headache.phoneNo == ''
-                      ? Transform.rotate(
-                          angle: -1.5 * pi,
-                          child: const Icon(Icons.phone_disabled))
-                      : const Icon(Icons.phone),
+              child: widget.headache.phoneNo == null ||
+                      widget.headache.phoneNo == ''
+                  ? Transform.rotate(
+                      angle: -1.5 * pi, child: const Icon(Icons.phone_disabled))
+                  : const Icon(Icons.phone),
             ),
           ),
         ],
