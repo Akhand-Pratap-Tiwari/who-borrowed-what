@@ -55,6 +55,8 @@ class _HomeState extends State<Home> {
           ),
           centerTitle: true,
           bottom: TabBar(
+          labelColor: Colors.blueGrey.shade300,
+            indicatorColor: Colors.blueGrey.shade300,
             onTap: (value) {
               if (value == 0) {
                 showResolved.value = false;
@@ -67,13 +69,13 @@ class _HomeState extends State<Home> {
                     wheres: {'rwc': Where(field: 'resolved', isEqualTo: true)});
               }
             },
-            tabs: const [
+            tabs:  const [
               Tab(
-                icon: Icon(Icons.warning_amber_rounded),
+                icon: Icon(Icons.warning_rounded, color: Colors.orangeAccent,),
                 text: 'UnResolved',
               ),
               Tab(
-                icon: Icon(Icons.done_all_rounded),
+                icon: Icon(Icons.done_all_rounded, color: Colors.green,),
                 text: 'Resolved',
               )
             ],

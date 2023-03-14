@@ -30,7 +30,7 @@ class _MySearchFieldState extends State<MySearchField> {
       widget.homeState.changeWidth();
     });
 
-    Future.delayed(
+    Future.delayed(//For animation purposes
       const Duration(milliseconds: 500),
       () {
         if (widget.homeState.width != widget.homeState.minWidth) {

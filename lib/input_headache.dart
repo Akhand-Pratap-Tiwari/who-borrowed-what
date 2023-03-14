@@ -206,7 +206,7 @@ class _InputScreenState extends State<InputScreen> {
                                 time.hour, time.minute),
                           );
                           // headache.display();
-                          _addData().then((value) {
+                          _addData().then((_) {
                             Navigator.of(context)
                                 .popUntil((route) => route.isFirst);
                             ScaffoldMessenger.of(context).showSnackBar(

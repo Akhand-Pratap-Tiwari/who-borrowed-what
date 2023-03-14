@@ -31,17 +31,15 @@ class _MyTickButtonState extends State<MyTickButton> {
                 Icons.done_rounded,
                 color: Colors.teal,
               ),
-              onPressed: () async {
+              onPressed: () {
                 setState(() {
                   isLoading = true;
                   borderRadius = 32;
                 });
-                await Future.delayed(
-                    const Duration(seconds: 5),
-                    () async => await FirebaseFirestore.instance
-                        .collection('headaches')
-                        .doc(widget.docId)
-                        .update({'resolved': true}));
+                FirebaseFirestore.instance
+                    .collection('headaches')
+                    .doc(widget.docId)
+                    .update({'resolved': true});
               }),
     );
   }

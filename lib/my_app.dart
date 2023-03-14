@@ -10,15 +10,21 @@ class MyApp extends StatelessWidget {
       title: 'Who Borrowed What',
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.light,
-        // colorScheme: const ColorScheme.light(),
-      ),
+          useMaterial3: true,
+          brightness: Brightness.light,
+          floatingActionButtonTheme:
+              FloatingActionButtonThemeData(backgroundColor: Colors.purple)
+
+          // colorScheme: const ColorScheme.light(),
+          ),
       darkTheme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        // colorScheme: const ColorScheme.dark(),
-      ),
+          useMaterial3: true,
+          brightness: Brightness.dark,
+          floatingActionButtonTheme:
+              FloatingActionButtonThemeData(backgroundColor: Colors.purple)
+
+          // colorScheme: const ColorScheme.light(),
+          ),
       themeMode: ThemeMode.system,
       home: const Home(),
     );

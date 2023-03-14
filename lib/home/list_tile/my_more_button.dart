@@ -46,15 +46,10 @@ class _MyMoreButtonState extends State<MyMoreButton>
         builder: (BuildContext context, state, Widget? child) {
           if (state == 'restoring') {
             if (!finalActionStarted) {
-              Future.delayed(
-                const Duration(seconds: 5),
-                () async {
-                  await FirebaseFirestore.instance
-                      .collection('headaches')
-                      .doc(widget.docId)
-                      .update({'resolved': false});
-                },
-              );
+              FirebaseFirestore.instance
+                  .collection('headaches')
+                  .doc(widget.docId)
+                  .update({'resolved': false});
             }
             finalActionStarted = true;
             return const Padding(
@@ -69,13 +64,10 @@ class _MyMoreButtonState extends State<MyMoreButton>
               builder: (context, child) {
                 if (controller.isCompleted || finalActionStarted) {
                   if (!finalActionStarted) {
-                    Future.delayed(
-                      const Duration(seconds: 5),
-                      () async => await FirebaseFirestore.instance
-                          .collection('headaches')
-                          .doc(widget.docId)
-                          .delete(),
-                    );
+                    FirebaseFirestore.instance
+                        .collection('headaches')
+                        .doc(widget.docId)
+                        .delete();
                   }
                   finalActionStarted = true;
                   return const Padding(
@@ -112,7 +104,7 @@ class _MyMoreButtonState extends State<MyMoreButton>
             );
           } else {
             return PopupMenuButton(
-              onSelected: (value) async {
+              onSelected: (value) {
                 if (value == 'restore') {
                   setState(() {
                     loadingState.value = 'restoring';
