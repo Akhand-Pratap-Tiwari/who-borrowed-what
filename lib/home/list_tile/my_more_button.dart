@@ -19,6 +19,14 @@ class _MyMoreButtonState extends State<MyMoreButton>
   late AnimationController controller;
   double borderRadius = 8;
   ValueNotifier<String> loadingState = ValueNotifier('idle');
+  Widget setFinalAndShowLoad() {
+    finalActionStarted = true;
+    return const Padding(
+      padding: EdgeInsets.all(8.0),
+      child: CircularProgressIndicator(),
+    );
+  }
+
   @override
   void initState() {
     controller = AnimationController(
@@ -51,11 +59,7 @@ class _MyMoreButtonState extends State<MyMoreButton>
                   .doc(widget.docId)
                   .update({'resolved': false});
             }
-            finalActionStarted = true;
-            return const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
-            );
+            return setFinalAndShowLoad();
           }
           if (state == 'deleting') {
             controller.forward(from: controller.value);
@@ -69,11 +73,7 @@ class _MyMoreButtonState extends State<MyMoreButton>
                         .doc(widget.docId)
                         .delete();
                   }
-                  finalActionStarted = true;
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
-                  );
+                  return setFinalAndShowLoad();
                 }
 
                 return IconButton(

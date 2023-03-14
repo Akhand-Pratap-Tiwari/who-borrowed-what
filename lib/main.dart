@@ -20,10 +20,8 @@ Future<void> main() async {
 
 //TODO: Add collapsible button
 //TODO: Remove debug prints
-//TODO: Implement date search
 //TODO: Remove state passing logic
 //TODO: State Preservation Across tabs
-//TODO: Do button logic optimization
 //TODO: Write some comments
 
   runApp(const MyApp());
