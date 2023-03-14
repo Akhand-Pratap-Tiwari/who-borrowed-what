@@ -13,12 +13,13 @@ class MyMoreButton extends StatefulWidget {
   State<MyMoreButton> createState() => _MyMoreButtonState();
 }
 
-class _MyMoreButtonState extends State<MyMoreButton> with TickerProviderStateMixin {
+class _MyMoreButtonState extends State<MyMoreButton>
+    with TickerProviderStateMixin {
   bool finalActionStarted = false;
   late AnimationController controller;
   double borderRadius = 8;
   ValueNotifier<String> loadingState = ValueNotifier('idle');
-   @override
+  @override
   void initState() {
     controller = AnimationController(
       vsync: this,
@@ -37,22 +38,23 @@ class _MyMoreButtonState extends State<MyMoreButton> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return AnimatedContainer(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(borderRadius),
-          color: Colors.amber),
+        borderRadius: BorderRadius.circular(borderRadius),
+        color: Colors.white,
+      ),
       duration: const Duration(milliseconds: 250),
       child: ValueListenableBuilder(
         builder: (BuildContext context, state, Widget? child) {
           if (state == 'restoring') {
-            if(!finalActionStarted) {
+            if (!finalActionStarted) {
               Future.delayed(
-              const Duration(seconds: 5),
-              () async {
-                await FirebaseFirestore.instance
-                    .collection('headaches')
-                    .doc(widget.docId)
-                    .update({'resolved': false});
-              },
-            );
+                const Duration(seconds: 5),
+                () async {
+                  await FirebaseFirestore.instance
+                      .collection('headaches')
+                      .doc(widget.docId)
+                      .update({'resolved': false});
+                },
+              );
             }
             finalActionStarted = true;
             return const Padding(
@@ -66,14 +68,14 @@ class _MyMoreButtonState extends State<MyMoreButton> with TickerProviderStateMix
               animation: controller,
               builder: (context, child) {
                 if (controller.isCompleted || finalActionStarted) {
-                  if(!finalActionStarted) {
+                  if (!finalActionStarted) {
                     Future.delayed(
-                    const Duration(seconds: 5),
-                    () async => await FirebaseFirestore.instance
-                        .collection('headaches')
-                        .doc(widget.docId)
-                        .delete(),
-                  );
+                      const Duration(seconds: 5),
+                      () async => await FirebaseFirestore.instance
+                          .collection('headaches')
+                          .doc(widget.docId)
+                          .delete(),
+                    );
                   }
                   finalActionStarted = true;
                   return const Padding(
@@ -98,7 +100,9 @@ class _MyMoreButtonState extends State<MyMoreButton> with TickerProviderStateMix
                   ),
                   onPressed: () {
                     setState(() {
-                      controller..reset()..stop();
+                      controller
+                        ..reset()
+                        ..stop();
                       loadingState.value = 'idle';
                       borderRadius = 8;
                     });
@@ -146,4 +150,3 @@ class _MyMoreButtonState extends State<MyMoreButton> with TickerProviderStateMix
     );
   }
 }
-

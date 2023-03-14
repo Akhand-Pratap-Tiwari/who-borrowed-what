@@ -15,12 +15,10 @@ class _MyTickButtonState extends State<MyTickButton> {
 
   @override
   Widget build(BuildContext context) {
-        bool isDark = MediaQuery.of(context).platformBrightness == Brightness.dark ? true : false;
-
     return AnimatedContainer(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        color:isDark ? Colors.white : Colors.amber,
+        color: Colors.white,
       ),
       duration: const Duration(milliseconds: 250),
       child: isLoading

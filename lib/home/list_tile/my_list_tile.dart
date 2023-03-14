@@ -45,12 +45,16 @@ class _MyListTileState extends State<MyListTile> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = MediaQuery.of(context).platformBrightness == Brightness.dark ? true : false;
+    bool isDark = MediaQuery.of(context).platformBrightness == Brightness.dark
+        ? true
+        : false;
     return Ink(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0),
           gradient: LinearGradient(
-            colors: (widget._resolved ?? true) ?  [Colors.indigoAccent, Colors.blue] : [Colors.pink, Colors.orange],
+            colors: (widget._resolved ?? true)
+                ? [Colors.indigoAccent, Colors.blue]
+                : [Colors.pinkAccent, Colors.purple],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           )
@@ -83,7 +87,7 @@ class _MyListTileState extends State<MyListTile> {
                     : null;
               },
               child: CircleAvatar(
-                backgroundColor:  isDark ?  Colors.black : Colors.white,
+                backgroundColor: isDark ? Colors.black : Colors.white,
                 child: widget.headache.phoneNo == null ||
                         widget.headache.phoneNo == ''
                     ? Transform.rotate(
