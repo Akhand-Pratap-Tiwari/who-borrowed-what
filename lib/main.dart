@@ -21,7 +21,6 @@ Future<void> main() async {
 //TODO: Add collapsible button
 //TODO: Remove debug prints
 //TODO: Implement date search
-//TODO: Make Mobile call 
 //TODO: Remove state passing logic
 //TODO: Improve Themeing
 //TODO: State Preservation Across tabs
