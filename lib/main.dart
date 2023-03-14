@@ -22,11 +22,9 @@ Future<void> main() async {
 //TODO: Remove debug prints
 //TODO: Implement date search
 //TODO: Remove state passing logic
-//TODO: Improve Themeing
 //TODO: State Preservation Across tabs
 //TODO: Do button logic optimization
 //TODO: Write some comments
-//TODO: Remove debug prints
 
   runApp(const MyApp());
 }

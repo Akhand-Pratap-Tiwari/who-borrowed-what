@@ -15,14 +15,15 @@ class _MySearchFieldState extends State<MySearchField> {
   TextEditingController searchController = TextEditingController();
   Widget? widget1;
   String field = 'normItemName';
-  
-  void _onEditingComplete(){
+
+  void _onEditingComplete() {
     searchController.text = searchController.text.trim();
-        searchController.selection =
-            TextSelection.collapsed(offset: searchController.text.length);
-        currentQuery.value = qb.replace(
-            wheres: {'swc':Where(
-                field: field, isEqualTo: searchController.text.toUpperCase()),});
+    searchController.selection =
+        TextSelection.collapsed(offset: searchController.text.length);
+    currentQuery.value = qb.replace(wheres: {
+      'swc':
+          Where(field: field, isEqualTo: searchController.text.toUpperCase()),
+    });
   }
 
   onSearchIconPressed() {
@@ -30,7 +31,8 @@ class _MySearchFieldState extends State<MySearchField> {
       widget.homeState.changeWidth();
     });
 
-    Future.delayed(//For animation purposes
+    Future.delayed(
+      //For animation purposes
       const Duration(milliseconds: 500),
       () {
         if (widget.homeState.width != widget.homeState.minWidth) {
@@ -92,39 +94,48 @@ class _MySuffixPopUpState extends State<MySuffixPopUp> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
+      onSelected: (value) {
+        widget.mySearchFieldState.setField(value);
+
+        if (value == 'normItemName') {
+          changeIcon(Icons.abc_rounded);
+        }
+
+        if (value == 'normBorrowerName') {
+          changeIcon(Icons.person_4_outlined);
+        }
+
+        if (value == 'roomNo') {
+          changeIcon(Icons.meeting_room_rounded);
+        }
+      },
       child: Icon(icon),
       itemBuilder: (BuildContext context) => [
         const PopupMenuItem(child: Text('Search in Field:')),
         PopupMenuItem(
-          onTap: () {
-            changeIcon(Icons.abc_rounded);
-            widget.mySearchFieldState.setField('normItemName');
-          },
-          child: Wrap(
-            children: const [Icon(Icons.abc_rounded), Text(' Item Name')],
-          ),
-        ),
-        PopupMenuItem(
-          onTap: () {
-            changeIcon(Icons.person_4_outlined);
-            widget.mySearchFieldState.setField('normBorrowerName');
-          },
+          value: 'normItemName',
           child: Wrap(
             children: const [
-              Icon(Icons.person_4_outlined),
-              Text(' Borrower Name')
+              Icon(Icons.abc_rounded),
+              Text(' Item Name'),
             ],
           ),
         ),
         PopupMenuItem(
-          onTap: () {
-            changeIcon(Icons.date_range_outlined);
-            widget.mySearchFieldState.setField('dateTime');
-          },
+          value: 'normBorrowerName',
           child: Wrap(
             children: const [
-              Icon(Icons.date_range_outlined),
-              Text(' Date Time')
+              Icon(Icons.person_4_outlined),
+              Text(' Borrower Name'),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 'roomNo',
+          child: Wrap(
+            children: const [
+              Icon(Icons.meeting_room_rounded),
+              Text(' Room No.'),
             ],
           ),
         ),
