@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../headache_class.dart';
@@ -50,9 +52,19 @@ class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin {
       ),
       leading: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          CircleAvatar(
-            child: Icon(Icons.call),
+        children: [
+          InkResponse(
+            onTap: () {
+              
+            },
+            child: CircleAvatar(
+              child:
+                  widget.headache.phoneNo == null || widget.headache.phoneNo == ''
+                      ? Transform.rotate(
+                          angle: -1.5 * pi,
+                          child: const Icon(Icons.phone_disabled))
+                      : const Icon(Icons.phone),
+            ),
           ),
         ],
       ),
@@ -69,4 +81,3 @@ class _MyListTileState extends State<MyListTile> with TickerProviderStateMixin {
     );
   }
 }
-

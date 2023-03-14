@@ -30,6 +30,7 @@ Future<void> main() async {
 //TODO: State Preservation Across tabs
 //TODO: Do button logic optimization
 //TODO: Write some comments
+//TODO: Remove debug prints
 
   runApp(const MyApp());
 }
