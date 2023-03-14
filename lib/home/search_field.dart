@@ -77,7 +77,9 @@ class _MySearchFieldState extends State<MySearchField> {
 
 class MySuffixPopUp extends StatefulWidget {
   final mySearchFieldState;
-  const MySuffixPopUp({super.key, required this.mySearchFieldState});
+  const MySuffixPopUp({super.key,
+   required this.mySearchFieldState,
+  });
 
   @override
   State<MySuffixPopUp> createState() => _MySuffixPopUpState();
@@ -96,6 +98,8 @@ class _MySuffixPopUpState extends State<MySuffixPopUp> {
     return PopupMenuButton(
       onSelected: (value) {
         widget.mySearchFieldState.setField(value);
+        
+        
 
         if (value == 'normItemName') {
           changeIcon(Icons.abc_rounded);

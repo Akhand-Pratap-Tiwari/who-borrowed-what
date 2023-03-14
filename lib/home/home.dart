@@ -72,11 +72,11 @@ class _HomeState extends State<Home> {
             tabs:  const [
               Tab(
                 icon: Icon(Icons.warning_rounded, color: Colors.orangeAccent,),
-                text: 'UnResolved',
+                text: 'Current',
               ),
               Tab(
                 icon: Icon(Icons.done_all_rounded, color: Colors.green,),
-                text: 'Resolved',
+                text: 'History',
               )
             ],
           ),

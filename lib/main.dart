@@ -18,10 +18,10 @@ Future<void> main() async {
     ),
   );
 
+//TODO: Add Authentication
 //TODO: Add collapsible button
-//TODO: Remove debug prints
 //TODO: Remove state passing logic
-//TODO: State Preservation Across tabs
+//TODO: Remove debug prints
 //TODO: Write some comments
 
   runApp(const MyApp());
