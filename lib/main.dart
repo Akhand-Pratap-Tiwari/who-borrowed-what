@@ -18,7 +18,6 @@ Future<void> main() async {
     ),
   );
 
-//TODO: Add cancel op,
 //TODO: Add collapsible button
 //TODO: Remove debug prints
 //TODO: Implement date search
