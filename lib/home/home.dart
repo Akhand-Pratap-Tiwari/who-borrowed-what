@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
             },
             tabs: const [
               Tab(
-                icon: Icon(Icons.flag_rounded),
+                icon: Icon(Icons.warning_amber_rounded),
                 text: 'UnResolved',
               ),
               Tab(
