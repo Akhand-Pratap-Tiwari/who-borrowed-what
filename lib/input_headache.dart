@@ -80,7 +80,7 @@ class _InputScreenState extends State<InputScreen> {
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         icon: Icon(Icons.note_alt_sharp),
-                        labelText: '*Item Name',
+                        labelText: 'Item Name *',
                       ),
                       onSaved: (newValue) {
                         itemName = newValue.toString();
@@ -92,7 +92,7 @@ class _InputScreenState extends State<InputScreen> {
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         icon: Icon(Icons.person),
-                        labelText: '*Borrower Name',
+                        labelText: 'Borrower Name *',
                       ),
                       onSaved: (newValue) {
                         borrowerName = newValue.toString();
@@ -104,7 +104,7 @@ class _InputScreenState extends State<InputScreen> {
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         icon: Icon(Icons.meeting_room_rounded),
-                        labelText: '*Room No.',
+                        labelText: 'Room No. *',
                       ),
                       onSaved: (newValue) {
                         roomNo = newValue.toString();
@@ -158,7 +158,7 @@ class _InputScreenState extends State<InputScreen> {
                               },
                               decoration: const InputDecoration(
                                 icon: Icon(Icons.date_range_rounded),
-                                labelText: '*Date',
+                                labelText: 'Date *',
                               ),
                               validator: _validator,
                             ),
@@ -182,7 +182,7 @@ class _InputScreenState extends State<InputScreen> {
                               },
                               decoration: const InputDecoration(
                                 icon: Icon(Icons.av_timer_rounded),
-                                labelText: '*Time',
+                                labelText: 'Time *',
                               ),
                               validator: _validator,
                             ),
