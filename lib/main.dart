@@ -24,6 +24,6 @@ Future<void> main() async {
 //TODO: Remove state passing logic
 //TODO: Remove debug prints
 //TODO: Write some comments
-//More ifo on long press on tile
+//TODO: More ifo on long press on tile
   runApp(const MyApp());
 }
