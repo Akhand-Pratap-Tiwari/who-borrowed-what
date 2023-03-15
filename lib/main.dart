@@ -17,13 +17,13 @@ Future<void> main() async {
       systemNavigationBarColor: Colors.transparent,
     ),
   );
-//Add icon
-//Change Name
-//TODO: Add Authentication
+
 //TODO: Add collapsible button
+//TODO: Add Authentication and DB
+
 //TODO: Remove state passing logic
+
 //TODO: Remove debug prints
 //TODO: Write some comments
-//TODO: More ifo on long press on tile
   runApp(const MyApp());
 }
