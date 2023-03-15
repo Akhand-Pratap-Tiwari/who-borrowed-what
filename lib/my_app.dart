@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.light,
           floatingActionButtonTheme:
-              FloatingActionButtonThemeData(backgroundColor: Colors.purple)
+              const FloatingActionButtonThemeData(backgroundColor: Colors.purple)
 
           // colorScheme: const ColorScheme.light(),
           ),
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
           floatingActionButtonTheme:
-              FloatingActionButtonThemeData(backgroundColor: Colors.purple)
+              const FloatingActionButtonThemeData(backgroundColor: Colors.purple)
 
           // colorScheme: const ColorScheme.light(),
           ),
