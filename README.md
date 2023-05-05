@@ -19,4 +19,4 @@ I encountered a scenario where my tiles were losing state or more precisely tile
 I hate boilerplates 😑 so I looked at the documentation but that too was quite vague so I dug the code itself and since, FirestoreListView is built upon the flutter's listView I did some changes to it to expose the property. I used the snapshot that the FirestoreListView was using internally and exposed it to the callback function so that I can access snapshot outside the package file. After this in the callback function I simple used the snapshot to find the new index and returned that index corresponding to the key of the tile. By the way the key that I was using for tiles is the valuse key with "docId" as its value so I was able to uniquely identify and set up One-to-One mapping function for the findChildIndexCallback.
 </br>
 </br>
-This edit has not beed comitted yet.
+This edit has not been comitted yet.
