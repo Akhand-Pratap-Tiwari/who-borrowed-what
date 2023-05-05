@@ -1,4 +1,5 @@
 # who_borrowed_what
+Everything important is in lib and pubspec contains all the dependencies.  
 
 ## Story:
 I used to lend notes to my fellow mates but I am a forgetful person. I was also looking for some exploratory project implementing Flutter and Firebase. Then I came up with this idea. This app basically keeps tracks of items that I have lent to others. 
@@ -16,3 +17,6 @@ I encountered a scenario where my tiles were losing state or more precisely tile
 </br>
 </br>
 I hate boilerplates 😑 so I looked at the documentation but that too was quite vague so I dug the code itself and since, FirestoreListView is built upon the flutter's listView I did some changes to it to expose the property. I used the snapshot that the FirestoreListView was using internally and exposed it to the callback function so that I can access snapshot outside the package file. After this in the callback function I simple used the snapshot to find the new index and returned that index corresponding to the key of the tile. By the way the key that I was using for tiles is the valuse key with "docId" as its value so I was able to uniquely identify and set up One-to-One mapping function for the findChildIndexCallback.
+</br>
+</br>
+This edit has not beed comitted yet.
